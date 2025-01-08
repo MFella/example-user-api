@@ -1,0 +1,27 @@
+service: serverless-example
+
+useDotenv: true
+
+plugins:
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: eu-north-1
+  environment:
+    DATABASE_URI: ${env:DATABASE_URI}
+    PORT: ${env:PORT}
+    JWT_SECRET: ${env:JWT_SECRET}
+    JWT_EXPIRES_IN_SEC: ${env:JWT_EXPIRES_IN_SEC}
+
+functions:
+  main:
+    handler: dist/main.handler
+    events:
+      - http:
+          method: ANY
+          path: /
+      - http:
+          method: ANY
+          path: '{proxy+}'

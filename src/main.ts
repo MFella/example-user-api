@@ -1,15 +1,26 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { Logger, ValidationPipe } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { ValidationPipe } from '@nestjs/common';
+import { Callback, Context, Handler } from 'aws-lambda';
+import serverlessExpress from '@codegenie/serverless-express';
 
-async function bootstrap() {
+let serverHandler: Handler;
+
+async function bootstrap(): Promise<Handler> {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api');
-  const configService = await app.get(ConfigService);
-  const port = configService.get<number>('port') ?? 3000;
   app.useGlobalPipes(new ValidationPipe());
-  await app.listen(port);
-  Logger.log(`App is listening on port ${port}`);
+  await app.init();
+
+  const expressApp = app.getHttpAdapter().getInstance();
+  return serverlessExpress({ app: expressApp });
 }
-bootstrap();
+
+export const handler: Handler = async (
+  event: any,
+  context: Context,
+  callback: Callback,
+) => {
+  serverHandler = serverHandler ?? (await bootstrap());
+  return serverHandler(event, context, callback);
+};
