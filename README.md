@@ -10,11 +10,38 @@ This is showcase of user api - created on [generic-auth app](https://generic-aut
 Api accepts two endpoints:
 
 <ul>
-<li>(<i>POST</i>) <b>*api-prefix*/user/</b> - resource resposible for login of user</li>
-<li>(<i>PUT</i>) <b>*api-prefix*/user/</b> - update action of user (requires valid jwt token)</li>
+<li>(<i>POST</i>) <b>*api-prefix*/user/</b> - resource resposible for login of user
+    <br />
+    Request body:
+    <ul>
+        <li>!email (<i>:string</i>)</li>
+        <li>!password (<i>:string</i>)</li>
+        <li>!provider (<i>:'jwt'</i>) - only jwt supported</li>
+        <li>idFromProvider? (<i>:string</i>) - id provided by external authentication source (github/google/fb)</li>
+        <li>picture? (<i>:string</i>) - path for user picture (url)</li>
+        <li>name? (<i>:string</i>) - name of user</li>
+    </ul>
+</li>
+<li>(<i>PUT</i>) <b>*api-prefix*/user/</b> - update action of user (requires valid jwt token)
+    <br />
+    Request body: 
+    <ul>
+        <li>name? (<i>:string</i>)</li>
+        <li>password? (<i>:string</i>)</li>
+        <li>picture? (<i>:string</i>)</li>
+    </ul>
+</li>
 </ul>
 
-, where <b>api-prefix</b> is set to <i>api</i>
+, where <b>api-prefix</b> is set to <i>api</i>.
+
+---
+
+**NOTE**
+
+Properties with: <b>!</b> are required, with <b>?</b> are optional
+
+---
 
 ## 👨🏻‍💻 Internals
 
