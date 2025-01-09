@@ -88,8 +88,6 @@ export class UserService {
       updateUserDto.password = await argon.hash(updateUserDto.password);
     }
 
-    const result = await argon.verify(updateUserDto.password, pass);
-
     for (const [key, value] of Object.entries(updateUserDto)) {
       if (value) {
         if (key === 'password') {
@@ -114,8 +112,8 @@ export class UserService {
     return {
       email: updateUserResult.email,
       provider: updateUserResult.provider,
-      name: updateUserResult.name,
-      picture: updateUserResult.picture,
+      name: updateUserDto?.name ?? updateUserResult.name,
+      picture: updateUserDto?.picture ?? updateUserResult.picture,
     };
   }
 
